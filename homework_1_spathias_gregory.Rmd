@@ -1,29 +1,32 @@
 ---
 title: "CompSCIX 415.2 Homework 1"
 output: html_document
+author: Gregory Spathias
+date: 6/12/2018
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-## Author: Gregory Spathias 
-## Date: June 12, 2018
-## R Markdown
+My github repository for my assignments can be found at this URL: [https://github.com/GregSpathias/compscix-415-2-assignments](https://github.com/GregSpathias/compscix-415-2-assignments)
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+'''{r load_packages, warning=FALSE, message=FALSE}
+library(mdsr)
+library(tidyverse)
+'''
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+'''{r}
+data("WorldCities")
+'''
 
-```{r cars}
-summary(cars)
-```
+QUESTION 1: This data set has 23,018 observations and 10 variables. The variable names are code, name, latitude, longitude, country, countryRegion, population, regionCode, region, and date.
 
-## Including Plots
+'''{r}
+glimpse(WorldCities)
+'''
 
-You can also embed plots, for example:
+"'{r}
+View(WorldCities)
+"'
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
