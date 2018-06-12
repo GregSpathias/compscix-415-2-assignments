@@ -8,6 +8,7 @@ date: 6/12/2018
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+<<<<<<< HEAD
 My github repository for my assignments can be found at this URL: [https://github.com/GregSpathias/compscix-415-2-assignments](https://github.com/GregSpathias/compscix-415-2-assignments)
 
 '''{r load_packages, warning=FALSE, message=FALSE}
@@ -30,3 +31,6 @@ View(WorldCities)
 "'
 
 
+=======
+My Github repository for my assignments can be found at this URL: [https://github.com/GregSpathias/compscix-415-2-assignments](https://github.com/GregSpathias/compscix-415-2-assignments)
+>>>>>>> dc8853d0da92da83d940bb16bbef69f6211b01f1
