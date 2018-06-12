@@ -1,9 +1,0 @@
----
-title: "CompSCIX 415.2 Homework 1"
-output: html_document
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-My Github repository for my assignments can be found at this URL: [https://github.com/GregSpathias/compscix-415-2-assignments](https://github.com/GregSpathias/compscix-415-2-assignments)
