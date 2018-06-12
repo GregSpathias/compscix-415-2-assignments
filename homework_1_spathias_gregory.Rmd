@@ -11,24 +11,39 @@ knitr::opts_chunk$set(echo = TRUE)
 <<<<<<< HEAD
 My github repository for my assignments can be found at this URL: [https://github.com/GregSpathias/compscix-415-2-assignments](https://github.com/GregSpathias/compscix-415-2-assignments)
 
-'''{r load_packages, warning=FALSE, message=FALSE}
+
+```{r load_packages, warning=FALSE, message=FALSE}
 library(mdsr)
 library(tidyverse)
-'''
+```
 
-'''{r}
+```{r}
 data("WorldCities")
-'''
+```
+
+
 
 QUESTION 1: This data set has 23,018 observations and 10 variables. The variable names are code, name, latitude, longitude, country, countryRegion, population, regionCode, region, and date.
 
-'''{r}
+```{r}
 glimpse(WorldCities)
-'''
-
-"'{r}
 View(WorldCities)
-"'
+```
+
+```{r}
+WorldCities <-head(WorldCities, 200) # 200 rows
+country_col <- WorldCities$country
+unique(country_col)
+```
+
+
+QUESTION 2:
+
+```{r}
+region_col <- WorldCities$region
+unique(region_col)
+```
+
 
 
 =======
