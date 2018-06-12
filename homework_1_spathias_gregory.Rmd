@@ -44,6 +44,39 @@ region_col <- WorldCities$region
 unique(region_col)
 ```
 
+```{r}
+country_col <- select(WorldCities, country)
+country_col <- WorldCities %>% select(country)
+```
+
+first_this %>% then_this %>% then_this
+
+```{r}
+WorldCities %>% select(region) %>% head(5)
+```
+
+QUESTION 3: 
+
+```{r}
+WorldCities %>% select(country) %>% unique()
+```
+
+Visualize it
+
+```{r}
+WorldCities %>% ggplot(aes(x = population)) + geom_histogram()
+```
+
+```{r}
+WorldCities%>% ggplot(aes(x = population))+geom_histogram()+xlab('City Population')
+```
+
+QUESTION 4:
+
+```{r}
+WorldCities%>% ggplot(aes(x = population))+geom_histogram()+xlab('City Population')+ ggtitle('my title')+ylab('Number of Cities')+theme_bw()
+```
+
 
 
 =======

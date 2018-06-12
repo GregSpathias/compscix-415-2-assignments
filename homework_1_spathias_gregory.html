@@ -9,6 +9,7 @@
 <meta name="generator" content="pandoc" />
 
 
+<meta name="author" content="Gregory Spathias" />
 
 
 <title>CompSCIX 415.2 Homework 1</title>
@@ -121,13 +122,46 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">CompSCIX 415.2 Homework 1</h1>
+<h4 class="author"><em>Gregory Spathias</em></h4>
+<h4 class="date"><em>6/12/2018</em></h4>
 
 </div>
 
 
-<p>My github repository for my assignments can be found at this URL: <a href="https://github.com/GregSpathias/compscix-415-2-assignments" class="uri">https://github.com/GregSpathias/compscix-415-2-assignments</a></p>
-<p>“’{r library(mdsr), warning=FALSE, message=FALSE}</p>
-<p>library(tidyverse)</p>
+<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD My github repository for my assignments can be found at this URL: <a href="https://github.com/GregSpathias/compscix-415-2-assignments" class="uri">https://github.com/GregSpathias/compscix-415-2-assignments</a></p>
+<pre class="r"><code>library(mdsr)
+library(tidyverse)</code></pre>
+<pre class="r"><code>data(&quot;WorldCities&quot;)</code></pre>
+<p>QUESTION 1: This data set has 23,018 observations and 10 variables. The variable names are code, name, latitude, longitude, country, countryRegion, population, regionCode, region, and date.</p>
+<pre class="r"><code>glimpse(WorldCities)</code></pre>
+<pre><code>## Observations: 23,018
+## Variables: 10
+## $ code          &lt;int&gt; 3040051, 3041563, 290594, 291074, 291696, 292223...
+## $ name          &lt;chr&gt; &quot;les Escaldes&quot;, &quot;Andorra la Vella&quot;, &quot;Umm al Qayw...
+## $ latitude      &lt;dbl&gt; 42.50729, 42.50779, 25.56473, 25.78953, 25.33132...
+## $ longitude     &lt;dbl&gt; 1.53414, 1.52109, 55.55517, 55.94320, 56.34199, ...
+## $ country       &lt;chr&gt; &quot;AD&quot;, &quot;AD&quot;, &quot;AE&quot;, &quot;AE&quot;, &quot;AE&quot;, &quot;AE&quot;, &quot;AE&quot;, &quot;AE&quot;, ...
+## $ countryRegion &lt;chr&gt; &quot;8&quot;, &quot;7&quot;, &quot;7&quot;, &quot;5&quot;, &quot;6&quot;, &quot;3&quot;, &quot;4&quot;, &quot;6&quot;, &quot;1&quot;, &quot;4&quot;...
+## $ population    &lt;dbl&gt; 15853, 20430, 44411, 115949, 33575, 1137347, 263...
+## $ regionCode    &lt;int&gt; 1033, 1037, 2, 2, 20, 11, 4, 6, 16, 15, 275, 4, ...
+## $ region        &lt;chr&gt; &quot;Europe/Andorra&quot;, &quot;Europe/Andorra&quot;, &quot;Asia/Dubai&quot;...
+## $ date          &lt;chr&gt; &quot;10/15/08&quot;, &quot;5/30/10&quot;, &quot;11/3/12&quot;, &quot;11/30/12&quot;, &quot;1...</code></pre>
+<pre class="r"><code>View(WorldCities)</code></pre>
+<pre class="r"><code>WorldCities &lt;-head(WorldCities, 200) # 200 rows
+country_col &lt;- WorldCities$country
+unique(country_col)</code></pre>
+<pre><code>## [1] &quot;AD&quot; &quot;AE&quot; &quot;AF&quot; &quot;AG&quot; &quot;AI&quot; &quot;AL&quot; &quot;AM&quot; &quot;AO&quot; &quot;AR&quot;</code></pre>
+<p>QUESTION 2:</p>
+<pre class="r"><code>region_col &lt;- WorldCities$region
+unique(region_col)</code></pre>
+<pre><code>##  [1] &quot;Europe/Andorra&quot;                 &quot;Asia/Dubai&quot;                    
+##  [3] &quot;Asia/Kabul&quot;                     &quot;America/Antigua&quot;               
+##  [5] &quot;America/Anguilla&quot;               &quot;Europe/Tirane&quot;                 
+##  [7] &quot;Asia/Yerevan&quot;                   &quot;Africa/Luanda&quot;                 
+##  [9] &quot;America/Argentina/Buenos_Aires&quot; &quot;America/Argentina/Cordoba&quot;     
+## [11] &quot;America/Argentina/Salta&quot;        &quot;America/Argentina/Tucuman&quot;     
+## [13] &quot;America/Argentina/San_Juan&quot;</code></pre>
+<p>======= My Github repository for my assignments can be found at this URL: <a href="https://github.com/GregSpathias/compscix-415-2-assignments" class="uri">https://github.com/GregSpathias/compscix-415-2-assignments</a> &gt;&gt;&gt;&gt;&gt;&gt;&gt; dc8853d0da92da83d940bb16bbef69f6211b01f1</p>
 
 
 
