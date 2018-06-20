@@ -184,4 +184,9 @@ ggplot(data = mpg) +
 geom_col() can be used to display a column chart with a user defined y variable. It is different than geom_bar() because geom_bar() only needs an x variable defined and the y variable will be equal to the count of objects in that category.
 
 
+##**What is a Data Scientist**
+In some charts the overal percentage does not add up to 100%. This is noted, but the numbers should be made to add up to 100% to make logical sense. For the data lifecycle chart, this could have been displayed better with a timeline showing the lifecycle in chronoligcal order. Throughout the entire document, there is an overuse of percentages. The author should have thrown in more raw numbers.
+
+
+
 
