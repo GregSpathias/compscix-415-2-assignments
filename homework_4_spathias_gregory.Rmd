@@ -1,0 +1,231 @@
+---
+title: "COMPSCIX 415.2 Homework 4"
+author: "Gregory Spathias"
+date: "July 3, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(mdsr)
+```
+
+```{r}
+file_path <- 'C:/Users/Gregory Spathias/Documents/compscix-415-2-assignments/Homework/flights.csv'
+flights <- read.csv(file = file_path)
+```
+
+##**Section 5.6.7**##
+```{r}
+not_cancelled <- flights %>% 
+  filter(!is.na(dep_delay), !is.na(arr_delay))
+```
+
+###**5.6.7.2**###
+a.Original
+```{r}
+not_cancelled %>% count(dest)
+```
+a.Another Way:
+```{r}
+not_cancelled %>% group_by(dest) %>% summarise(n = n())
+```
+
+b.Original
+```{r}
+not_cancelled %>% count(tailnum, wt = distance)
+```
+b.Another Way
+```{r}
+not_cancelled %>% group_by(tailnum) %>% summarise(n = sum(distance))
+```
+
+###**5.6.7.4**###
+```{r}
+cancelled <- flights %>% 
+  filter(is.na(dep_delay), is.na(arr_delay))
+```
+
+```{r}
+flights %>%
+  group_by(month, day) %>%
+  summarise(cancelled = mean(is.na(dep_delay)),
+            mean_dep = mean(dep_delay, na.rm = T)) %>%
+  ggplot(aes(y = cancelled)) +
+  geom_point(aes(x = mean_dep)) +
+  labs(x = "Avg delay per day", y = "Cancelled flights per day")
+```
+
+It looks like the average delay per day and the proportion of cancelled fights per day are positively correlated.
+
+###**5.6.7.6**###
+```{r}
+not_cancelled %>% count(dest, sort = T)
+```
+The count argument sorts your case in descending order. You would use this when you want to sort in descending order. In this case we would use it if we wanted to see the top 10 destinations by number of flights that are not cancelled.
+
+###**Extra Credit: 5.6.7.5**###
+Which carrier has the worst delays? Challenge: can you disentangle the effects of bad airports vs. bad carriers? Why/why not? (Hint: think about flights %>% group_by(carrier, dest) %>% summarise(n()))
+
+Since a delay of a couple minutes delay is not extremely detrimental to a passengers experience, but a delay of over an hour might be. Lets define the worst delays as flights over 1 hour delayed. For a flight to be detrimental the arrival delay and departure delay must both be an hour or more delayed. The worst carrier would be the one with the highest number of flights that were delayed by more than an hour. Using the code below we see that the three carrier with the worst delays is EV, B6, and UA. EV = ExpressJet Airlines Inc., B6 = JetBlue Airways, and UA = United Air Lines Inc. 
+
+```{r}
+worst_delays <- flights %>% 
+  filter(dep_delay > 59 & arr_delay >59)
+worst_delays %>% count(carrier, sort = T)
+
+
+```
+This same exercise can be done but aggregated by origin or destination to find the airports with the worst delays.
+
+
+##**Section 10.5**##
+###**10.5.1**###
+You can tell that an object is a tibble because when you print the object a comment will notify the user that the object is a tibble and the column type will appear beneath each column header. A tibble will also only display part of itself and then have a comment that describes the rest of the tibble. 
+
+###**10.5.2**###
+```{r}
+df <- data.frame(abc = 1, xyz = "a")
+df$x
+```
+
+```{r}
+tbl <- as_tibble(df)
+tbl$x
+```
+The $ command on the dataframe autocompleted the column name from “x” to “xyz.” Whereas when you run this on a tibble it returns an error because “x” is not a complete column name.
+
+```{r}
+df[, "xyz"]
+```
+
+```{r}
+tbl[,"xyz"]
+```
+
+```{r}
+df[, c("abc", "xyz")]
+```
+
+```{r}
+tbl[, c("abc", "xyz")]
+```
+Using brackets [] with a dataframe returns different objects depending on the number of columns. If you are returning one column, it will return a vector not a dataframe. This could cause some frustration if you didn’t know how many columns a command would return. If you were using this command on a dataframe you would need to account for a one column edge case.
+
+###**10.5.3**###
+If you have the name of a variable stored in an object you would need to us the bracket command([]) to extract the variable because the $ command is used to extract columns.
+
+###**10.5.6**###
+The option that controls the number of additional column names at the footer of a tibble is (n_extra).
+
+##**Section 12.3.3**##
+###**12.3.3.2**###
+```
+table4a %>% 
+  gather(1999, 2000, key = "year", value = "cases")
+```
+This code breaks you need to put quotes around the variable names you want to gather. This code is looking for the 1999th and 2000th column of the data frame. Corrected code below:
+```{r}
+table4a %>% 
+  gather('1999', '2000', key = "year", value = "cases")
+```
+
+###**12.3.3.3**###
+```{r}
+people <- tribble(
+  ~name,             ~key,    ~value,
+  #-----------------|--------|------
+  "Phillip Woods",   "age",       45,
+  "Phillip Woods",   "height",   186,
+  "Phillip Woods",   "age",       50,
+  "Jessica Cordero", "age",       37,
+  "Jessica Cordero", "height",   156
+)
+```
+Spreading this tibble fails because Phillip Woods has two keys. This is most likely from Phillip Woods getting recorded in 2 different years. You could add another column and call it first_visit or number. Corrected code below:
+```{r}
+people <- tribble(
+  ~name,             ~key,    ~value, ~number,
+  #-----------------|--------|------|------
+  "Phillip Woods",   "age",       45, 1,
+  "Phillip Woods",   "height",   186, 1,
+  "Phillip Woods",   "age",       50, 2,
+  "Jessica Cordero", "age",       37, 1,
+  "Jessica Cordero", "height",   156, 1
+)
+```
+```{r}
+spread(people, key, value)
+```
+
+###**12.3.3.4**###
+```{r}
+preg <- tribble(
+  ~pregnant, ~male, ~female,
+  "yes",     NA,    10,
+  "no",      20,    12
+)
+```
+You need to gather this tribble. The variables are: 
+- pregnant: "yes" or "no"
+- female
+- count
+
+```{r}
+gather(preg, sex, count, male, female) %>%
+  mutate(pregnant = pregnant ==  "yes",
+         female = sex == "female") 
+```
+
+
+##**Section 12.4.3**##
+###**12.4.3.1**###
+```{r}
+tibble(x = c("a,b,c", "d,e,f,g", "h,i,j")) %>% 
+  separate(x, c("one", "two", "three"), extra = "drop")
+```
+The 'extra' argument in the separate() verb controls what happens when there are too many pieces. You can either warn(sends a warning), drop(drops extra values), or merge(splits at most length(into) times).
+
+```{r}
+tibble(x = c("a,b,c", "d,e", "f,g,i")) %>% 
+  separate(x, c("one", "two", "three"), fill = "right")
+```
+The 'fill' argument controls what happens when there are not enough pieces. You can either warn(send a warning), right(fill with missing values on the right), or left(fill with missing values on the left).
+
+###**12.4.3.2**###
+The 'remove' argument in unite() and separate() removes the input column from the output dataframe, the default is set to TRUE. You would se this to FALSE if you want to keep the old variable and the new variables.
+
+##**BABY NAMES**##
+- Download the baby_names.txt file from Canvas which is in the Homework 4 assignment section.
+```{r}
+file_path <- 'C:/Users/Gregory Spathias/Documents/compscix-415-2-assignments/Homework/baby_names.txt'
+baby_names <- read.delim(file = file_path, sep = "|")
+```
+- Load this file into R correctly and take a glimpse of the output.
+```{r}
+glimpse(baby_names)
+```
+- Export this file as a csv file and call it ‘baby_names.csv’.
+```{r}
+write.csv(baby_names, file = "C:/Users/Gregory Spathias/Documents/compscix-415-2-assignments/Homework/baby_names_export.csv")
+```
+- Reload the baby_names.csv file and take another glimpse.
+
+```{r}
+file_path <- 'C:/Users/Gregory Spathias/Documents/compscix-415-2-assignments/Homework/baby_names_export.csv'
+baby_names_import <- read.csv(file = file_path)
+```
+
+```{r}
+glimpse(baby_names_import)
+```
+
+
+
+
+
+
