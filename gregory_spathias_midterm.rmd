@@ -1,0 +1,213 @@
+---
+title: "COMPSCIX 415.2 Homework 5/Midterm"
+author: "Gregory Spathias"
+date: "July 10, 2018"
+output: 
+    html_document:
+      toc: true
+      toc_depth: 3
+      toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+[Link to Github Repository](https://github.com/GregSpathias/compscix-415-2-assignments)
+
+
+Setup
+
+```{r}
+library(tidyverse)
+library(mdsr)
+```
+
+
+
+###**The tidyverse packages (3 ponts)**###
+1. Packages associated with each task:
+
+* Plotting: ggplot2
+* Data munging/wrangling: dplyr
+* Reshaping (speading and gathering) data: tidyr
+* Importing/exporting data: readr
+
+2. Two functions that you've used from each package:
+
+* Plotting: 
+    + geom_histogram() to create a histogram, 
+    + geom_boxplot() to create a boxplot or series of boxplots
+* Data munging/wrangling: 
+    + select() to take a subset of columns, 
+    + summarize() to aggregate the data across rows
+* Reshaping (speading and gathering) data: 
+    + spread() to spread data, 
+    + gather() to gather data
+* Importing/exporting data: 
+    + read_csv() to import a flat files, 
+    + write_csv() to write to a csv file
+
+
+###**R Basics (1.5 points)**###
+1. Fix this code with the fewest number of changes possible so it works:
+```{r}
+My_data.name___is.too00ooLong <- c( 1 , 2   , 3 )
+```
+**removed '!'**
+
+2. Fix this code so it works:
+```{r}
+my_string <- c('has', 'an', 'error', 'in', 'it')
+```
+**corrected uppercase 'C' to lowercase 'c'. Added a quote after 'it'.**
+
+3.Look at the code below and comment on what happened to the values in the vector.
+```{r}
+my_vector <- c(1, 2, '3', '4', 5)
+my_vector
+```
+**Since some variables in the vector are text and not integers, R corrected all variables to text.**
+
+###**Data Import/Export (3 points)**###
+1. Import rail_trail txt file into R
+```{r}
+file_path <- 'C:/Users/Gregory Spathias/Documents/compscix-415-2-assignments/Midterm/rail_trail.txt'
+
+rail_trail <- read_delim(file_path, '|')
+glimpse(rail_trail)
+```
+
+2. Export file into a comma-separated file, then import it again, and take a glimpse.
+
+```{r}
+write.csv(rail_trail, file = 'C:/Users/Gregory Spathias/Documents/compscix-415-2-assignments/Midterm/rail_trail.csv')
+
+file_path_rail_trailcsv <- 'C:/Users/Gregory Spathias/Documents/compscix-415-2-assignments/Midterm/rail_trail.csv'
+
+rail_trail_csv <- read_csv(file_path_rail_trailcsv)
+
+glimpse(rail_trail_csv)
+```
+
+###**Visualization (6 points)**###
+1. Critique the graphic
+
+* The graphic says that it shows the percentage of respondents who say it is likely that a woman will be president, but the bubbles in many of the rows do not add up to 100%. For example, in the 'Under 45' row the Yes(79%) and No(16%) bubbles add up to 95%.
+* The graphic shows two different types of categorical variables in the same graphic. It shows both the age of respondents and the gender of the respondents. Thes should be split out.
+* Color in the visual is misused here. The gender categories are both colored, but the age categories are not colored even though both of these separate categories are categorical variables.
+
+2. Reproduce the graphic using the diamonds dataset
+```{r} 
+diamonds
+```
+
+```{r}
+ggplot(diamonds, mapping = aes(x = cut, y = carat)) + geom_boxplot(mapping = aes(fill = color), position = 'identity') + coord_flip() + xlab('CUT OF DIAMOND') + ylab('CARAT OF DIAMOND')
+```
+
+
+
+3. To make the visual more useful we can change the position of the color boxplots to 'dodge'
+
+```{r}
+ggplot(diamonds, mapping = aes(x = cut, y = carat)) + geom_boxplot(mapping = aes(fill = color), position = 'dodge') + coord_flip() + xlab('CUT OF DIAMOND') + ylab('CARAT OF DIAMOND')
+```
+
+
+###**Data Munging and Wrangling (6 points)**###
+1. This data is not tidy, but we can use the spread() function to put cases and population in their own columns.
+
+```{r}
+spread(table2,key = type, value = count)
+```
+2. Create a new column in the diamonds data set called price_per_carat
+
+```{r}
+diamonds_w_pp_ct <- diamonds %>% mutate(price_per_carat = price/carat)
+```
+
+3. For each cut of diamond - how many diamonds, and what proportion, have a price >10000 and a carat < 1.5
+* Number of diamonds with price > 10000 and carat < 1.5 is 834.
+* The proportion of diamonds with price > 10000 and carat < 1.5 is 0.015 or 1.5% of all diamonds.
+
+```{r}
+diamonds %>% summarise(consideration = count(price >10000 & carat < 1.5), all = n(), proportion = consideration/all)
+```
+
+* Do the results make sense? Why?
+  + Yes the results make sense because there is a positive correlation between price and carat so we would expect very few diamonds to have a relatively high price(>10000) and a small number of carats(1.5).
+
+* Do we need to be wary of any of these numbers? Why?
+  + We should be wary of these numbers because there may be other factors that go into why a diamond has a high price and a low number of carats, maybe all these diamonds have an ideal cut.
+
+
+###**EDA (6 points)**###
+
+```{r}
+txhousing
+```
+
+1. During what time period is this data from?
+**This data is from January 2000 to July 2015.**
+```{r}
+txhousing %>% summarise(start_year = min(year), end_year = max(year))
+```
+
+```{r}
+txhousing %>% arrange(year,month)
+```
+
+```{r}
+txhousing %>% arrange(desc(year),desc(month))
+```
+
+
+2. How many cities are represented? 
+**46**
+
+```{r}
+txhousing %>% select(city) %>% unique() %>% summarise(count = n())
+```
+
+
+3. Which city, month, and year had the highest number of sales?
+**Houston during the month of July 2015**
+
+```{r}
+txhousing %>% arrange(desc(sales))
+```
+
+
+4. What kind of relationship do you think exists between the number of listings and the number of sales? Check your assumption and show your work.
+**I think there will be a positive correlation between the number of listings and the number of sales because if their are more active listings more people will find what they are looking for and will purchase a house. This is confirmed in the scatterplot below.**
+
+```{r}
+txhousing %>% ggplot(mapping = aes(x = listings, y = sales)) +geom_point(position = 'jitter') + geom_smooth()
+```
+
+5. What proportion of sales is missing for each city?
+```{r}
+txhousing %>% group_by(city) %>% summarise(missing = sum(is.na(sales)), count = n(), prop_missing = missing/count) %>% arrange(desc(prop_missing))
+```
+
+6. Looking at only the cities and months with greater than 500 sales:
+
+```{r}
+sales_500 <- txhousing %>% filter(sales > 500)
+```
+
+- Are the distributions of the median sales price (column name median), when grouped by city, different? The same? Show your work.
+
+**The distributions of the median sales price per city is different based on where the property is located. Here is a plot of boxplots for cities with months that had over 500 sales.**
+```{r}
+sales_500
+
+ggplot(data = sales_500) + geom_boxplot(mapping = aes(x = reorder(city, median, FUN = mean), y = median)) + coord_flip() + xlab('City')
+```
+
+- Any cities that stand out that you’d want to investigate further?
+**I would want to investigate Collin County as they had the highest average median sale price. I would also want to investigate Fort Bend because they look like they have the largest spread of median sale prices per month. This might mean that prices fluctuate wildly throughout the year. I would also want to look at Dallas further as they seem to have the most positive outliers and I would like to see why.**
+
+- Why might we want to filter out all cities and months with sales less than 500?
+**We might want to do this to eliminate cities and months with a small consideration set where the median could vary by a large amount depending on how many sales occurred in each month.**
