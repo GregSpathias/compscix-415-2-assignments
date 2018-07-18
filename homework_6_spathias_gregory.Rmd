@@ -1,0 +1,142 @@
+---
+title: "COMPSCIX 415.2 Homework 6"
+author: "Gregory Spathias"
+date: "July 16, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(mosaicData)
+```
+
+
+###**Exercise 1**###
+```{r}
+data(Whickham)
+```
+####**1.**####
+The variables in the dataset are:
+* outcome - survival status after 20 years: a factor with levels 'Alive' or 'Dead'
+* smoker - smoking status at baseline: a factor with levels 'Yes' or 'No'
+* age - age (in years) at the time of the first survey
+
+####**2.**####
+There are 1,314 observations in this dataset. They each represent women who were classified as current smokers or as never having smoked.
+
+####**3.**####
+```{r}
+Whickham %>% count(smoker, outcome)
+```
+
+This chart shows that regardless of whether a woman is a smoker or not, there are is still roughly the same proportion of woman that are dead and alive.
+```{r}
+Whickham %>% ggplot(aes(x = smoker)) + geom_bar(aes(fill = outcome))
+```
+
+
+####**4.**####
+```{r}
+Whickham_w_age_groups <- Whickham %>% mutate(age_group =
+  case_when(age <= 44 ~ '<=44', 
+            age > 44 & age <= 64 ~ 'between 44 and 64', 
+            age > 64 ~ 'age >64'))
+```
+Now that we split up age groups, it looks like there is a higher number of individuals greater than 63 that have died who were smokers. This could be because smoking takes a long time to affect someone, so we don't see a tilt in deaths until someone reaches an older age. This trend was hidden in the overall numbers, but was presented after we faceted the age groups. This is an example of Simpson's Paradox.
+
+```{r}
+Whickham_w_age_groups %>% ggplot(aes(x = smoker)) + geom_bar(aes(fill = outcome)) + facet_grid(~ age_group)
+```
+
+###**Exercise 2**###
+####**1.**####
+
+```{r}
+n <- 10000
+
+# look at ?rgamma to read about this function
+gamma_samp <- tibble(x = rgamma(n, shape = 1, scale = 2))
+```
+
+```{r}
+gamma_samp %>% ggplot() + geom_histogram(mapping = aes(x =x))
+```
+
+
+####**2.**####
+```{r}
+gamma_samp %>% summarize( mean = mean(x, na.rm = TRUE), sd = sd(x, na.rm = TRUE))
+```
+Both of these are close to 2.
+
+####**3.**####
+```{r}
+n2 <- 30
+
+# look at ?rgamma to read about this function
+gamma_samp_2 <- tibble(x = rgamma(n2, shape = 1, scale = 2))
+gamma_samp_2 %>% ggplot() + geom_histogram(mapping = aes(x =x))
+```
+```{r}
+gamma_samp_2 %>% summarize( mean = mean(x, na.rm = TRUE), sd = sd(x, na.rm = TRUE))
+```
+
+
+####**4.**####
+```{r}
+# create a vector with 10000 NAs
+mean_samp <- rep(NA, 10000)
+
+# start a loop
+for(i in 1:10000) {
+  g_samp <- rgamma(30, shape = 1, scale = 2)
+  mean_samp[i] <- mean(g_samp)
+}
+# Convert vector to a tibble
+mean_samp <- tibble(mean_samp)
+```
+
+
+####**5.**####
+
+```{r}
+mean_samp %>% ggplot() + geom_histogram(mapping = aes(x =mean_samp))
+```
+####**6.**####
+```{r}
+mean_samp %>% summarize(mean = mean(mean_samp, na.rm = TRUE), sd = sd(mean_samp, na.rm = TRUE))
+```
+
+####**7.**####
+The standard deviation is much smaller than our gamma samples, but this Standard Deviation is much larger than I would imagine it to be. All of the means should be close to 2 so I would think the SD would be close to 0.
+
+####**8.**####
+```{r}
+mean_samp <- rep(NA, 10000)
+
+# start a loop
+for(i in 1:10000) {
+  g_samp <- rgamma(300, shape = 1, scale = 2)
+  mean_samp[i] <- mean(g_samp)
+}
+# Convert vector to a tibble
+mean_samp <- tibble(mean_samp)
+```
+
+```{r}
+mean_samp %>% ggplot() + geom_histogram(mapping = aes(x =mean_samp))
+```
+
+```{r}
+mean_samp %>% summarize(mean = mean(mean_samp, na.rm = TRUE), sd = sd(mean_samp, na.rm = TRUE))
+```
+
+
+```{r}
+2/sqrt(300)
+```
+Yes, this sample also matches up with the Central Limit Theorem as the SD should be close to 2 divided by the square root of 300 which is 0.1154701 and the SD is 0.1155744. The theorem checks out.
