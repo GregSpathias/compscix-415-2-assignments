@@ -1,0 +1,85 @@
+---
+title: "COMPSCIX 415.2 Homework 7"
+author: "Gregory Spathias"
+date: "July 23, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(broom)
+library(tidyverse)
+```
+
+
+#```{r}
+data_description <- readtext('C:/Users/Gregory Spathias/Documents/compscix-415-2-assignments/data_description.txt')
+#```
+
+##**Exercise 1**##
+
+```{r}
+data_description <- read.delim('C:/Users/Gregory Spathias/Documents/compscix-415-2-assignments/data_description.txt')
+train <- read_csv('C:/Users/Gregory Spathias/Documents/compscix-415-2-assignments/train.csv')
+```
+There are 1,460 observations and 81 columns.
+
+
+##**Exercise 2**##
+
+- Visualize the distribution of SalePrice
+```{r}
+ggplot(data = train) + geom_histogram(mapping = aes(x = SalePrice), binwidth = 10000)
+```
+
+- Visualize the covariation between SalePrice and Neighborhood
+```{r}
+ggplot(data = train) + geom_boxplot(mapping = aes(x = reorder(Neighborhood, SalePrice, FUN = median), y = SalePrice)) + coord_flip() + xlab('Neighborhood')
+
+```
+
+- Visualize the covariation between SalePrice and OverallQual
+
+```{r}
+ggplot(data = train) + geom_boxplot(mapping = aes(x = reorder(OverallQual, SalePrice, FUN = median), y = SalePrice)) + coord_flip() + xlab('Overall Quality')
+```
+
+
+##**Exercise 3**##
+```
+train_lm <- lm(formula = Y ~ 180921, data = train)
+
+```
+
+
+##**Exercise 4**##
+```{r}
+lm(formula = SalePrice ~ GrLivArea + OverallQual + Neighborhood, data = train) 
+```
+GrLivArea: Above grade (ground) living area square feet
+OverallQual: Rates the overall material and finish of the house
+Neighborhood: Physical locations within Ames city limits
+
+
+- How would you interpret the coefficients on GrLivArea and OverallQual?
+GrLivArea and OverallQual should have a positive correlation with SalePrice, so you can interprest these coefficients as saying for every increase in one square foot of GrLivArea the SalePrice increases by 55.56. For every increase in one quality point in OverallQual the SalePrice increases by 20,951.42. 
+- How would you interpret the coefficient on NeighborhoodBrkSide?
+You can interpret this coefficient as if a house is located in Brookside the average SalePrice drops by 13025.45.
+- Are the features significant?
+- Are the features practically significant?
+- Is the model a good fit?
+
+##**Exercise 5 - Optional**##
+
+
+##**Exercise 6**##
+```{r}
+sim1a <- tibble(
+  x = rep(1:10, each = 3),
+  y = x * 1.5 + 6 + rt(length(x), df = 2)
+)
+```
+
